@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sv:node xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" sv:name="generateBackup">
+  <sv:property sv:name="jcr:primaryType" sv:type="Name">
+    <sv:value>mgnl:contentNode</sv:value>
+  </sv:property>
+  <sv:property sv:name="catalog" sv:type="String">
+    <sv:value>neoskop-backup</sv:value>
+  </sv:property>
+  <sv:property sv:name="command" sv:type="String">
+    <sv:value>backup</sv:value>
+  </sv:property>
+  <sv:property sv:name="cron" sv:type="String">
+    <sv:value>0 0 3 ? * * *</sv:value>
+  </sv:property>
+  <sv:property sv:name="description" sv:type="String">
+    <sv:value>generate backup</sv:value>
+  </sv:property>
+  <sv:property sv:name="enabled" sv:type="Boolean">
+    <sv:value>true</sv:value>
+  </sv:property>
+</sv:node>
