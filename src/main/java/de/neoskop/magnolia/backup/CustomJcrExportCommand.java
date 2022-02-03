@@ -37,7 +37,7 @@ public class CustomJcrExportCommand extends JcrExportCommand {
     public ContentHandler getContentHandler(OutputStream out, boolean prettyPrint) {
         // only namespaces allowed in JCR bootstraps are 'sv' and 'xsi'
         NamespaceFilter filter = new NamespaceFilter("sv", "xsi");
-        filter.setContentHandler(XmlContentHandlerFactory.newXmlContentHandler(out));
+        filter.setContentHandler(XmlContentHandlerFactory.newXmlContentHandler(out, prettyPrint));
         return filter;
     }
 
@@ -100,7 +100,8 @@ public class CustomJcrExportCommand extends JcrExportCommand {
             public ContentHandler getContentHandler(OutputStream out, boolean prettyPrint) {
                 // only namespaces allowed in JCR bootstraps are 'sv' and 'xsi'
                 NamespaceFilter filter = new NamespaceFilter("sv", "xsi");
-                filter.setContentHandler(XmlContentHandlerFactory.newXmlContentHandler(out));
+                filter.setContentHandler(
+                        XmlContentHandlerFactory.newXmlContentHandler(out, prettyPrint));
                 return filter;
             }
         },

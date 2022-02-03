@@ -4,9 +4,13 @@ Description of the module **Neoskop Magnolia Backup Module**.
 
 # Dependencies
 
-As of version 0.1.0:
+Until version 0.1.0:
 
 - [Magnolia CMS][1] >= 6.1.4
+
+As of version 0.2.0:
+
+- [Magnolia CMS][1] >= 6.2.13
 
 # Installation
 
@@ -16,7 +20,7 @@ The module must be added as a dependency in the `pom.xml` of the Magnolia projec
 <dependency>
     <groupId>com.github.neoskop</groupId>
     <artifactId>neoskop-magnolia-backup</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 

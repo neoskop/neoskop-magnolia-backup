@@ -3,14 +3,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.neoskop.magnolia</groupId>
   <artifactId>neoskop-magnolia-backup</artifactId>
-  <version>0.1.0</version>
+  <version>0.2.0</version>
   <packaging>jar</packaging>
   <name>Backup Neoskop Magnolia Module</name>
   <!--
   <description>Please uncomment and fill in ...</description>
   -->
   <properties>
-    <magnoliaBundleVersion>6.1.4</magnoliaBundleVersion>
+    <magnoliaBundleVersion>6.2.13</magnoliaBundleVersion>
     <javaVersion>1.8</javaVersion>
   </properties>
 
@@ -35,6 +35,7 @@
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-scheduler</artifactId>
     </dependency>
+
 
     <dependency>
         <groupId>com.jcraft</groupId>
