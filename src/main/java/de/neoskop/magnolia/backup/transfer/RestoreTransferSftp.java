@@ -21,7 +21,7 @@ public class RestoreTransferSftp extends RestoreTransfer {
         com.jcraft.jsch.Session jschSession;
         try {
             jschSession = sshClient.getSession(BackupConfiguration.getServerUsername(),
-                    BackupConfiguration.getServerIp());
+                    BackupConfiguration.getServerHost());
             jschSession.setPassword(BackupConfiguration.getServerPassword());
             jschSession.setConfig("StrictHostKeyChecking", "no");
             jschSession.connect();

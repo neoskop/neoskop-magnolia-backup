@@ -3,6 +3,7 @@ package de.neoskop.magnolia.backup.commands;
 import de.neoskop.magnolia.backup.CustomDataTransporter;
 import de.neoskop.magnolia.backup.configuration.BackupConfiguration;
 import de.neoskop.magnolia.backup.transfer.RestoreTransfer;
+import de.neoskop.magnolia.backup.transfer.RestoreTransferS3;
 import de.neoskop.magnolia.backup.transfer.RestoreTransferSftp;
 import info.magnolia.commands.impl.BaseRepositoryCommand;
 import info.magnolia.context.Context;
@@ -34,9 +35,17 @@ public class Restore extends BaseRepositoryCommand {
     public String execute() {
         MgnlContext.setInstance(MgnlContext.getSystemContext());
 
-        RestoreTransfer restoreTransfer = null;
-        if ("sftp".equals(BackupConfiguration.getProtocol())) {
-            restoreTransfer = new RestoreTransferSftp();
+        RestoreTransfer restoreTransfer;
+        switch (BackupConfiguration.getProtocol()) {
+            case "sftp":
+                restoreTransfer = new RestoreTransferSftp();
+                break;
+            case "s3":
+                restoreTransfer = new RestoreTransferS3();
+                break;
+            default:
+                throw new IllegalArgumentException(
+                        "Unsupported protocol: " + BackupConfiguration.getProtocol());
         }
         if (!restoreTransfer.download()) {
             return "Download failed";
@@ -53,8 +62,7 @@ public class Restore extends BaseRepositoryCommand {
 
                 String name = StringUtils.removeEnd(fileName, ".xml");
                 String repository = StringUtils.substringBefore(name, ".");
-                String pathName =
-                        StringUtils.substringAfter(StringUtils.substringBeforeLast(name, "."), ".");
+                String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(name, "."), ".");
                 String nodeName = StringUtils.substringAfterLast(name, ".");
                 String fullPath;
 
@@ -85,8 +93,7 @@ public class Restore extends BaseRepositoryCommand {
     private FileInputStream getFileInputStreamFromZip(ZipInputStream zipInput, String fileName)
             throws FileNotFoundException, IOException {
         FileInputStream fileInputStream;
-        String tmpRepositoryFilePath =
-                BackupConfiguration.getTmpImportFolder() + File.separator + fileName;
+        String tmpRepositoryFilePath = BackupConfiguration.getTmpImportFolder() + File.separator + fileName;
 
         FileOutputStream output = null;
         byte[] buffer = new byte[2048];

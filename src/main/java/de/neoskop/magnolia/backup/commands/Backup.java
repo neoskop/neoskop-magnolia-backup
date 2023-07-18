@@ -4,6 +4,7 @@ import de.neoskop.magnolia.backup.CustomJcrExportCommand;
 import de.neoskop.magnolia.backup.configuration.BackupConfiguration;
 import de.neoskop.magnolia.backup.domain.Repository;
 import de.neoskop.magnolia.backup.transfer.BackupTransfer;
+import de.neoskop.magnolia.backup.transfer.BackupTransferS3;
 import de.neoskop.magnolia.backup.transfer.BackupTransferSftp;
 import info.magnolia.commands.impl.BaseRepositoryCommand;
 import info.magnolia.context.Context;
@@ -33,7 +34,7 @@ public class Backup extends BaseRepositoryCommand {
             }
 
             ZipOutputStream zipOut = new ZipOutputStream(
-                    new FileOutputStream(BackupConfiguration.getTenporaryBackupFilePath()));
+                    new FileOutputStream(BackupConfiguration.getTemporaryBackupFilePath()));
             final File backupFolder =
                     new File(BackupConfiguration.getTenporaryRepositoriesFolderPath());
 
@@ -52,9 +53,17 @@ public class Backup extends BaseRepositoryCommand {
 
             zipOut.close();
 
-            BackupTransfer backupTransfer = null;
-            if ("sftp".equals(BackupConfiguration.getProtocol())) {
-                backupTransfer = new BackupTransferSftp();
+            BackupTransfer backupTransfer;
+            switch (BackupConfiguration.getProtocol()) {
+                case "sftp":
+                    backupTransfer = new BackupTransferSftp();
+                    break;
+                case "s3":
+                    backupTransfer = new BackupTransferS3();
+                    break;
+                default:
+                    throw new IllegalArgumentException(
+                            "Unsupported protocol: " + BackupConfiguration.getProtocol());
             }
             backupTransfer.upload();
         } catch (Exception e) {

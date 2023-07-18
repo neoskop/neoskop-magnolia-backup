@@ -39,10 +39,14 @@ Please note that the folder structure must already be created on the SFTP server
 
 A brief explanation of the options:
 
-- BACKUP_PROTOCOL: Currently there is only the option for `sftp`, other storage options may follow in the future
-- BACKUP_IP: IP address to the SFTP server
-- BACKUP_USERNAME: Username from SFTP server
-- BACKUP_PASSWORD: Password from user
+- BACKUP_PROTOCOL: Include options for `sftp` and `s3`
+- BACKUP_HOST: Host or IP address to the SFTP server, or the endpoint of your Amazon S3 bucket if s3 is selected
+- BACKUP_USERNAME: Username for SFTP server (Not needed for `s3`)
+- BACKUP_PASSWORD: Password from SFTP user (Not needed for `s3`)
+- BACKUP_ACCESS_KEY: The access key for your Amazon S3 bucket (Not needed for `sftp`)
+- BACKUP_SECRET_KEY: The secret access key for your Amazon S3 bucket (Not needed for `sftp`)
+- BACKUP_REGION: The region of your Amazon S3 bucket (Not needed for `sftp`)
+- BACKUP_BUCKET: The name of your Amazon S3 bucket (Not needed for `sftp`)
 - BACKUP_PATH: Path to the backup directory
 - BACKUP_REPOSITORIES: The workspaces to be saved can be specified via the ";" separator. If only a certain path is to be exported and imported from the workspace, it must be specified after the workspace with a ","
 - BACKUP_PROJECT: Project name
@@ -59,7 +63,7 @@ Example to pass settings via the environment variables:
 
 ```
 BACKUP_PROTOCOL: "sftp"
-BACKUP_IP: "1.2.3.4"
+BACKUP_HOST: "1.2.3.4"
 BACKUP_USERNAME: "username"
 BACKUP_PASSWORD: "password"
 BACKUP_PATH: "/path/to/folder/for/backup"
@@ -77,7 +81,7 @@ Example to pass settings via magnolia.properties file:
 
 ```
 neoskop.magnolia.backup.server.protocol=sftp
-neoskop.magnolia.backup.server.ip=1.2.3.4
+neoskop.magnolia.backup.server.host=1.2.3.4
 neoskop.magnolia.backup.server.username=username
 neoskop.magnolia.backup.server.password=password
 neoskop.magnolia.backup.server.path=/path/to/folder/for/backup

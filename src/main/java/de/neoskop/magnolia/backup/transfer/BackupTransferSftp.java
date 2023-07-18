@@ -17,7 +17,7 @@ public class BackupTransferSftp extends BackupTransfer {
         com.jcraft.jsch.Session session;
         try {
             session = sshClient.getSession(BackupConfiguration.getServerUsername(),
-                    BackupConfiguration.getServerIp());
+                    BackupConfiguration.getServerHost());
 
             session.setPassword(BackupConfiguration.getServerPassword());
             session.setConfig("StrictHostKeyChecking", "no");
@@ -26,7 +26,7 @@ public class BackupTransferSftp extends BackupTransfer {
             Channel channel = session.openChannel("sftp");
             channel.connect();
             ChannelSftp sftpChannel = (ChannelSftp) channel;
-            sftpChannel.put(BackupConfiguration.getTenporaryBackupFilePath(),
+            sftpChannel.put(BackupConfiguration.getTemporaryBackupFilePath(),
                     BackupConfiguration.getServerPath() + File.separator
                             + BackupConfiguration.getCurrentEnvironment() + File.separator
                             + BackupConfiguration.getBackupFileName());

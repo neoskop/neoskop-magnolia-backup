@@ -16,9 +16,14 @@ public class BackupConfiguration {
     private static final String REPOSITORIES = "/repositories";
 
     private static final String BACKUP_SERVER_PROTOCOL_ENV = "BACKUP_PROTOCOL";
-    private static final String BACKUP_SERVER_IP_ENV = "BACKUP_IP";
+    private static final String BACKUP_SERVER_HOST_ENV = "BACKUP_HOST";
     private static final String BACKUP_SERVER_USERNAME_ENV = "BACKUP_USERNAME";
     private static final String BACKUP_SERVER_PASSWORD_ENV = "BACKUP_PASSWORD";
+    private static final String BACKUP_ACCESS_KEY_ENV = "BACKUP_ACCESS_KEY";
+    private static final String BACKUP_SECRET_KEY_ENV = "BACKUP_SECRET_KEY";
+    private static final String BACKUP_REGION_ENV = "BACKUP_REGION";
+    private static final String BACKUP_BUCKET_ENV = "BACKUP_BUCKET";
+
     private static final String BACKUP_SERVER_PATH_ENV = "BACKUP_PATH";
     private static final String BACKUP_REPOSITORIES_ENV = "BACKUP_REPOSITORIES";
     private static final String BACKUP_PROJECT_ENV = "BACKUP_PROJECT";
@@ -33,11 +38,15 @@ public class BackupConfiguration {
 
     private static final String BACKUP_SERVER_PROTOCOL_PROP =
             "neoskop.magnolia.backup.server.protocol";
-    private static final String BACKUP_SERVER_IP_PROP = "neoskop.magnolia.backup.server.ip";
+    private static final String BACKUP_SERVER_HOST_PROP = "neoskop.magnolia.backup.server.host";
     private static final String BACKUP_SERVER_USERNAME_PROP =
             "neoskop.magnolia.backup.server.username";
     private static final String BACKUP_SERVER_PASSWORD_PROP =
             "neoskop.magnolia.backup.server.password";
+    private static final String BACKUP_ACCESS_KEY_PROP = "neoskop.magnolia.backup.accesskey";
+    private static final String BACKUP_SECRET_KEY_PROP = "neoskop.magnolia.backup.secretkey";
+    private static final String BACKUP_REGION_PROP = "neoskop.magnolia.backup.region";
+    private static final String BACKUP_BUCKET_PROP = "neoskop.magnolia.backup.bucket";
     private static final String BACKUP_SERVER_PATH_PROP = "neoskop.magnolia.backup.server.path";
     private static final String BACKUP_REPOSITORIES_PROP = "neoskop.magnolia.backup.repositories";
     private static final String BACKUP_PROJECT_PROP = "neoskop.magnolia.backup.project";
@@ -69,7 +78,7 @@ public class BackupConfiguration {
         return getTmpImportFolder() + File.separator + getBackupFileName();
     }
 
-    public static String getTenporaryBackupFilePath() {
+    public static String getTemporaryBackupFilePath() {
         return getTmpBackupFolder() + File.separator + getBackupFileName();
     }
 
@@ -99,8 +108,8 @@ public class BackupConfiguration {
                 BACKUP_SERVER_PROTOCOL_PROP);
     }
 
-    public static String getServerIp() {
-        return getValueFromSystemEnvOrMgnlProp(BACKUP_SERVER_IP_ENV, BACKUP_SERVER_IP_PROP);
+    public static String getServerHost() {
+        return getValueFromSystemEnvOrMgnlProp(BACKUP_SERVER_HOST_ENV, BACKUP_SERVER_HOST_PROP);
     }
 
     public static String getServerUsername() {
@@ -111,6 +120,22 @@ public class BackupConfiguration {
     public static String getServerPassword() {
         return getValueFromSystemEnvOrMgnlProp(BACKUP_SERVER_PASSWORD_ENV,
                 BACKUP_SERVER_PASSWORD_PROP);
+    }
+
+    public static String getAccessKey() {
+        return getValueFromSystemEnvOrMgnlProp(BACKUP_ACCESS_KEY_ENV, BACKUP_ACCESS_KEY_PROP);
+    }
+
+    public static String getSecretKey() {
+        return getValueFromSystemEnvOrMgnlProp(BACKUP_SECRET_KEY_ENV, BACKUP_SECRET_KEY_PROP);
+    }
+
+    public static String getRegion() {
+        return getValueFromSystemEnvOrMgnlProp(BACKUP_REGION_ENV, BACKUP_REGION_PROP);
+    }
+
+    public static String getBucket() {
+        return getValueFromSystemEnvOrMgnlProp(BACKUP_BUCKET_ENV, BACKUP_BUCKET_PROP);
     }
 
     public static String getServerPath() {
