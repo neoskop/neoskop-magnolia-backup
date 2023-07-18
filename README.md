@@ -12,6 +12,10 @@ As of version 0.2.0:
 
 - [Magnolia CMS][1] >= 6.2.13
 
+As of version 0.3.0:
+
+- [Magnolia CMS][1] >= 6.2.36
+
 # Installation
 
 The module must be added as a dependency in the `pom.xml` of the Magnolia project:
