@@ -30,7 +30,7 @@ public class Backup extends BaseRepositoryCommand {
             createTmpFolder();
 
             for (Repository repository : BackupConfiguration.getRepositories()) {
-                backupChildren(repository.getWorkspace(), repository.getPath());
+                backupChildren(repository, repository.getPath());
             }
 
             ZipOutputStream zipOut = new ZipOutputStream(
@@ -87,14 +87,9 @@ public class Backup extends BaseRepositoryCommand {
         }
     }
 
-    private void backupChildren(String repository, String path) throws Exception {
-        String pathName = DataTransporter.createExportPath(path);
-        pathName = DataTransporter.encodePath(pathName, DataTransporter.DOT, DataTransporter.UTF8);
-        if (DataTransporter.DOT.equals(pathName)) {
-            pathName = StringUtils.EMPTY; // root node
-        }
+    private void backupChildren(Repository repository, String path) throws Exception {
+        String fileName = repository.getFilename();
         String format = "xml";
-        final String fileName = repository + pathName;
 
         OutputStream outputStream;
 
@@ -123,7 +118,7 @@ public class Backup extends BaseRepositoryCommand {
         }
 
         CustomJcrExportCommand customJcrExportCommand = new CustomJcrExportCommand();
-        customJcrExportCommand.backupChildren(outputStream, repository, path);
+        customJcrExportCommand.backupChildren(outputStream, repository.getWorkspace(), path);
     }
 
     @Override

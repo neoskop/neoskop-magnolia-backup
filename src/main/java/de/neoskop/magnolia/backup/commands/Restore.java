@@ -2,6 +2,7 @@ package de.neoskop.magnolia.backup.commands;
 
 import de.neoskop.magnolia.backup.CustomDataTransporter;
 import de.neoskop.magnolia.backup.configuration.BackupConfiguration;
+import de.neoskop.magnolia.backup.domain.Repository;
 import de.neoskop.magnolia.backup.transfer.RestoreTransfer;
 import de.neoskop.magnolia.backup.transfer.RestoreTransferS3;
 import de.neoskop.magnolia.backup.transfer.RestoreTransferSftp;
@@ -17,7 +18,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 public class Restore extends BaseRepositoryCommand {
@@ -51,39 +54,39 @@ public class Restore extends BaseRepositoryCommand {
             return "Download failed";
         }
 
-        try {
-            ZipInputStream zipInput = new ZipInputStream(
-                    new FileInputStream(BackupConfiguration.getTemporaryImportFilePath()));
+        try (ZipFile zipFile = new ZipFile(BackupConfiguration.getTemporaryImportFilePath())) {
 
-            ZipEntry entry;
-            while ((entry = zipInput.getNextEntry()) != null) {
-                String fileName = entry.getName();
-                FileInputStream fileInputStream = getFileInputStreamFromZip(zipInput, fileName);
+            for (Repository repository : BackupConfiguration.getRepositories()) {
+                String entryName = repository.getFilename() + ".xml";
+                ZipEntry entry = zipFile.getEntry(entryName);
 
-                String name = StringUtils.removeEnd(fileName, ".xml");
-                String repository = StringUtils.substringBefore(name, ".");
-                String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(name, "."), ".");
-                String nodeName = StringUtils.substringAfterLast(name, ".");
-                String fullPath;
+                if (entry != null) {
+                    InputStream fileInputStream = zipFile.getInputStream(entry);
 
-                if (StringUtils.isEmpty(pathName)) {
-                    pathName = "/";
-                    fullPath = "/" + nodeName;
+                    String name = repository.getFilename();
+                    String repositoryName = StringUtils.substringBefore(name, ".");
+                    String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(name, "."), ".");
+                    String nodeName = StringUtils.substringAfterLast(name, ".");
+                    String fullPath;
+
+                    if (StringUtils.isEmpty(pathName)) {
+                        pathName = "/";
+                        fullPath = "/" + nodeName;
+                    } else {
+                        pathName = "/" + StringUtils.replace(pathName, ".", "/");
+                        fullPath = pathName + "/" + nodeName;
+                    }
+
+                    System.out.println("Start to import repository: " + repositoryName);
+                    CustomDataTransporter.importXmlStream(fileInputStream, repositoryName, pathName,
+                            fullPath, false, false,
+                            ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING, true, true);
                 } else {
-                    pathName = "/" + StringUtils.replace(pathName, ".", "/");
-                    fullPath = pathName + "/" + nodeName;
+                    System.out.println("File not found in the zip: " + entryName);
                 }
-
-                System.out.println("Start to import repository: " + repository);
-                CustomDataTransporter.importXmlStream(fileInputStream, repository, pathName,
-                        fullPath, false, false,
-                        ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING, true, true);
-
             }
-            zipInput.close();
-
-        } catch (IOException e1) {
-            e1.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         log.info("restore completed.");
