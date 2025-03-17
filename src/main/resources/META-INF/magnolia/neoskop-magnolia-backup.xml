@@ -16,6 +16,10 @@
       <name>core</name>
       <version>*</version>
     </dependency>
+    <dependency>
+      <name>content-types</name>
+      <version>*</version>
+    </dependency>
     <!--  Add other dependencies here, e.g the mte (magnolia templating essentials).
     <dependency>
       <name>mte</name>
