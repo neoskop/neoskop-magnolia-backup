@@ -6,6 +6,7 @@ import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3Configuration;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import java.net.URI;
 import java.nio.file.Paths;
@@ -23,7 +24,11 @@ public class BackupTransferS3 extends BackupTransfer {
 
         S3Client s3Client = S3Client.builder().region(Region.of(region))
                 .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
-                .endpointOverride(URI.create(host)).build();
+                .endpointOverride(URI.create(host))
+                .serviceConfiguration(S3Configuration.builder()
+                        .chunkedEncodingEnabled(false)
+                        .build())
+                .build();
 
         String bucketName = BackupConfiguration.getBucket();
         String keyName = BackupConfiguration.getCurrentEnvironment() + "/"
