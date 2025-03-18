@@ -24,7 +24,7 @@ The module must be added as a dependency in the `pom.xml` of the Magnolia projec
 <dependency>
     <groupId>com.github.neoskop</groupId>
     <artifactId>neoskop-magnolia-backup</artifactId>
-    <version>0.3.2</version>
+    <version>0.3.3</version>
 </dependency>
 ```
 
