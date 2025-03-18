@@ -5,6 +5,7 @@ import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3Configuration;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import java.io.File;
 import java.net.URI;
@@ -28,7 +29,11 @@ public class RestoreTransferS3 extends RestoreTransfer {
 
         S3Client s3Client = S3Client.builder().region(Region.of(region))
                 .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
-                .endpointOverride(URI.create(host)).build();
+                .endpointOverride(URI.create(host))
+                .serviceConfiguration(S3Configuration.builder()
+                        .chunkedEncodingEnabled(false)
+                        .build())
+                .build();
 
         String bucketName = BackupConfiguration.getBucket();
         String keyName = BackupConfiguration.getRestoreEnvironment() + "/"
