@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.neoskop.magnolia</groupId>
   <artifactId>neoskop-magnolia-backup</artifactId>
-  <version>0.3.4</version>
+  <version>0.3.5</version>
   <packaging>jar</packaging>
   <name>Backup Neoskop Magnolia Module</name>
   <!--
