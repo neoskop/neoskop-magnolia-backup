@@ -31,7 +31,7 @@ public class BackupConfiguration {
 
     private static final String BACKUP_RESTORE_ENVIRONMENT_ENV = "BACKUP_RESTORE_ENVIRONMENT";
     private static final String BACKUP_RESTORE_ENABLED_ENV = "BACKUP_RESTORE_ENABLED";
-    private static final String BACKUP_RESTORE_DURING_STARTUP_ENV = "BACKUP_RESTORE_DURING_STARTUP_ENV";
+    private static final String BACKUP_RESTORE_DURING_STARTUP_ENV = "BACKUP_RESTORE_DURING_STARTUP";
 
     private static final String BACKUP_AUTO_ENVIRONMENT_ENV = "BACKUP_AUTO_ENVIRONMENT";
     private static final String BACKUP_AUTO_CRONJOB_ENV = "BACKUP_AUTO_CRONJOB";
