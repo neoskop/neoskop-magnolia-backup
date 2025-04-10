@@ -31,6 +31,7 @@ public class BackupConfiguration {
 
     private static final String BACKUP_RESTORE_ENVIRONMENT_ENV = "BACKUP_RESTORE_ENVIRONMENT";
     private static final String BACKUP_RESTORE_ENABLED_ENV = "BACKUP_RESTORE_ENABLED";
+    private static final String BACKUP_RESTORE_DURING_STARTUP_ENV = "BACKUP_RESTORE_DURING_STARTUP_ENV";
 
     private static final String BACKUP_AUTO_ENVIRONMENT_ENV = "BACKUP_AUTO_ENVIRONMENT";
     private static final String BACKUP_AUTO_CRONJOB_ENV = "BACKUP_AUTO_CRONJOB";
@@ -56,6 +57,8 @@ public class BackupConfiguration {
             "neoskop.magnolia.backup.restore.environment";
     private static final String BACKUP_RESTORE_ENABLED_PROP =
             "neoskop.magnolia.backup.restore.enabled";
+    private static final String BACKUP_RESTORE_DURING_STARTUP_PROP =
+            "neoskop.magnolia.backup.restore.duringStartup";
 
     private static final String BACKUP_AUTO_ENVIRONMENT_PROP =
             "neoskop.magnolia.backup.auto.environment";
@@ -172,6 +175,11 @@ public class BackupConfiguration {
     public static String getRestoreEnvironment() {
         return getValueFromSystemEnvOrMgnlProp(BACKUP_RESTORE_ENVIRONMENT_ENV,
                 BACKUP_RESTORE_ENVIRONMENT_PROP);
+    }
+
+    public static boolean getRestoreDuringStartup() {
+        return Boolean.parseBoolean(getValueFromSystemEnvOrMgnlProp(BACKUP_RESTORE_DURING_STARTUP_ENV,
+                BACKUP_RESTORE_DURING_STARTUP_PROP));
     }
 
     public static List<Repository> getRepositories() {

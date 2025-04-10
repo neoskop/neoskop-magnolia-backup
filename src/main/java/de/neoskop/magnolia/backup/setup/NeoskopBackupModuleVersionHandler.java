@@ -19,7 +19,11 @@ import java.util.List;
  */
 public class NeoskopBackupModuleVersionHandler extends DefaultModuleVersionHandler {
 
-    public NeoskopBackupModuleVersionHandler() {
+    public NeoskopBackupModuleVersionHandler() {}
+
+    @Override
+    protected List<Task> getStartupTasks(InstallContext installContext) {
+        return Arrays.asList(new RestoreFirstTimeTask(), new ReplaceBackupCronjobTimeTask());
     }
 
     @Override

@@ -26,8 +26,8 @@ public class NeoskopBackupModule implements ModuleLifecycle {
     @Override
     public void start(ModuleLifecycleContext moduleLifecycleContext) {
         if (RestoreFirstTime.getRestoreFirstTime().isRestoreFirstTime()
-                && BackupConfiguration.getRestoreEnabled()) {
-            log.debug("Start restore backup");
+                && BackupConfiguration.getRestoreEnabled() && !BackupConfiguration.getRestoreDuringStartup()) {
+            log.debug("Initiating backup restoration after Magnolia initialization");
             try {
                 new Restore().execute();
             } catch (Exception e) {

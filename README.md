@@ -60,6 +60,7 @@ A brief explanation of the options:
 - BACKUP_AUTO_CRONJOB: Cronjob string for the time of the automatic backup
 - BACKUP_RESTORE_ENABLED: Whether a recovery should be performed when the module is installed on for the first time. **Attention for Stage or Live environments** this setting should be set to `false`. Only local environments should have this setting set to `true`
 - BACKUP_RESTORE_ENVIRONMENT: Name of the environment from which a backup is to be imported if the project is started for the first time
+- BACKUP_RESTORE_DURING_STARTUP: Whether a restore should be performed at the first startup and not when Magnolia has been fully loaded. This setting is required if the modules node in the configuration workspace is also to be imported. Otherwise the default value is `false`.
 
 # Examples for the settings
 
@@ -79,6 +80,7 @@ BACKUP_AUTO_ENVIRONMENT: "local"
 BACKUP_AUTO_CRONJOB: "0 0 3 ? * * *"
 BACKUP_RESTORE_ENABLED: "true"
 BACKUP_RESTORE_ENVIRONMENT: "stage"
+BACKUP_RESTORE_DURING_STARTUP: "false"
 ```
 
 Example to pass settings via magnolia.properties file:
@@ -97,6 +99,7 @@ neoskop.magnolia.backup.auto.environment=local
 neoskop.magnolia.backup.auto.cronjob=0 0 3 ? * * *
 neoskop.magnolia.backup.restore.enabled=true
 neoskop.magnolia.backup.restore.environment=stage
+neoskop.magnolia.backup.restore.duringStartup=false
 ```
 
 [1]: https://www.magnolia-cms.com
