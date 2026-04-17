@@ -120,6 +120,17 @@ public class CustomDataTransporter extends DataTransporter {
                 SAXParserFactory saxParserFactory = SAXParserFactory.newInstance();
                 saxParserFactory.setNamespaceAware(true);
                 SAXParser saxParser = saxParserFactory.newSAXParser();
+                try {
+                    // Backup XML is trusted; disable JDK entity size limits so
+                    // large property values (>100k chars) don't abort the restore.
+                    saxParser.setProperty(
+                            "http://www.oracle.com/xml/jaxp/properties/maxGeneralEntitySizeLimit",
+                            0);
+                    saxParser.setProperty(
+                            "http://www.oracle.com/xml/jaxp/properties/totalEntitySizeLimit", 0);
+                } catch (SAXException e) {
+                    log.warn("could not disable XML entity size limits", e);
+                }
                 XMLReader initialReader = saxParser.getXMLReader();
                 try {
                     initialReader.setFeature("http://apache.org/xml/features/disallow-doctype-decl",
