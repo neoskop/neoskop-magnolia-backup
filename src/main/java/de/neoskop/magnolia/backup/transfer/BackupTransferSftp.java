@@ -6,7 +6,9 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.SftpException;
 import de.neoskop.magnolia.backup.configuration.BackupConfiguration;
+import de.neoskop.magnolia.backup.configuration.BackupRotation;
 import java.io.File;
+import java.time.LocalDate;
 
 public class BackupTransferSftp extends BackupTransfer {
 
@@ -30,6 +32,25 @@ public class BackupTransferSftp extends BackupTransfer {
                     BackupConfiguration.getServerPath() + File.separator
                             + BackupConfiguration.getCurrentEnvironment() + File.separator
                             + BackupConfiguration.getBackupFileName());
+
+            if (BackupConfiguration.getRotationEnabled()) {
+                try {
+                    String rotationFolder = BackupConfiguration.getServerPath() + File.separator
+                            + BackupConfiguration.getCurrentEnvironment() + File.separator
+                            + BackupRotation.ROTATION_FOLDER;
+                    try {
+                        sftpChannel.stat(rotationFolder);
+                    } catch (SftpException e) {
+                        sftpChannel.mkdir(rotationFolder);
+                    }
+                    for (String slotFileName : BackupRotation.getSlotFileNames(LocalDate.now())) {
+                        sftpChannel.put(BackupConfiguration.getTemporaryBackupFilePath(),
+                                rotationFolder + File.separator + slotFileName);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
 
             sftpChannel.exit();
         } catch (JSchException | SftpException e) {

@@ -61,6 +61,33 @@ A brief explanation of the options:
 - BACKUP_RESTORE_ENABLED: Whether a recovery should be performed when the module is installed on for the first time. **Attention for Stage or Live environments** this setting should be set to `false`. Only local environments should have this setting set to `true`
 - BACKUP_RESTORE_ENVIRONMENT: Name of the environment from which a backup is to be imported if the project is started for the first time
 - BACKUP_RESTORE_DURING_STARTUP: Whether a restore should be performed at the first startup and not when Magnolia has been fully loaded. This setting is required if the modules node in the configuration workspace is also to be imported. Otherwise the default value is `false`.
+- BACKUP_ROTATION_ENABLED: Whether rotating backup copies are written in addition to the latest backup (see [Backup rotation](#backup-rotation)). The default value is `true`
+- BACKUP_ROTATION_WEEKLY_DAY: Weekday on which an additional weekly rotation slot is written (`MONDAY` ... `SUNDAY`). The default value is `MONDAY`
+- BACKUP_ROTATION_WEEKLY_COUNT: Number of weekly rotation slots before the oldest one is overwritten again. The default value is `4`
+
+# Backup rotation
+
+In addition to the latest backup, which is overwritten on every run at the fixed path used by the restore, rotating copies are stored in a `rotation` subfolder by default:
+
+```
+{environment}/{project}-{instance}.zip                      latest backup (used by restore)
+{environment}/rotation/{project}-{instance}-monday.zip      daily slots, each overwritten weekly
+...
+{environment}/rotation/{project}-{instance}-sunday.zip
+{environment}/rotation/{project}-{instance}-weekly-1.zip    weekly slots, written on BACKUP_ROTATION_WEEKLY_DAY,
+...                                                         each overwritten after BACKUP_ROTATION_WEEKLY_COUNT weeks
+{environment}/rotation/{project}-{instance}-weekly-4.zip
+```
+
+With the default settings and a daily backup cronjob this keeps the backups of the last 7 days plus the backups of the last 4 Mondays.
+
+Please note:
+
+- The restore always uses the latest (non-rotated) file. To restore one of the rotation slots, copy it manually to the path of the latest backup.
+- For `sftp` the `rotation` subfolder is created automatically, only the environment folders have to exist (see above).
+- For `s3` the rotation slots are created via server-side copy, so no additional upload traffic is generated. The credentials must be allowed to perform `CopyObject` within the bucket.
+- Reducing BACKUP_ROTATION_WEEKLY_COUNT leaves stale higher-numbered `weekly-N` files behind, which are never touched again and can be deleted manually.
+- Backups larger than 5 GiB are not supported (limit of single-request S3 put/copy operations).
 
 # Examples for the settings
 
@@ -81,6 +108,9 @@ BACKUP_AUTO_CRONJOB: "0 0 3 ? * * *"
 BACKUP_RESTORE_ENABLED: "true"
 BACKUP_RESTORE_ENVIRONMENT: "stage"
 BACKUP_RESTORE_DURING_STARTUP: "false"
+BACKUP_ROTATION_ENABLED: "true"
+BACKUP_ROTATION_WEEKLY_DAY: "MONDAY"
+BACKUP_ROTATION_WEEKLY_COUNT: "4"
 ```
 
 Example to pass settings via magnolia.properties file:
@@ -100,6 +130,9 @@ neoskop.magnolia.backup.auto.cronjob=0 0 3 ? * * *
 neoskop.magnolia.backup.restore.enabled=true
 neoskop.magnolia.backup.restore.environment=stage
 neoskop.magnolia.backup.restore.duringStartup=false
+neoskop.magnolia.backup.rotation.enabled=true
+neoskop.magnolia.backup.rotation.weeklyDay=MONDAY
+neoskop.magnolia.backup.rotation.weeklyCount=4
 ```
 
 [1]: https://www.magnolia-cms.com

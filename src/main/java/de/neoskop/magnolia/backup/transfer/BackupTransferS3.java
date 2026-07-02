@@ -1,15 +1,18 @@
 package de.neoskop.magnolia.backup.transfer;
 
 import de.neoskop.magnolia.backup.configuration.BackupConfiguration;
+import de.neoskop.magnolia.backup.configuration.BackupRotation;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3Configuration;
+import software.amazon.awssdk.services.s3.model.CopyObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import java.net.URI;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 
 public class BackupTransferS3 extends BackupTransfer {
 
@@ -41,6 +44,23 @@ public class BackupTransferS3 extends BackupTransfer {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        }
+
+        if (BackupConfiguration.getRotationEnabled()) {
+            try {
+                for (String slotFileName : BackupRotation.getSlotFileNames(LocalDate.now())) {
+                    String slotKey = BackupConfiguration.getCurrentEnvironment() + "/"
+                            + BackupRotation.ROTATION_FOLDER + "/" + slotFileName;
+                    s3Client.copyObject(CopyObjectRequest.builder()
+                            .sourceBucket(bucketName)
+                            .sourceKey(keyName)
+                            .destinationBucket(bucketName)
+                            .destinationKey(slotKey)
+                            .build());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
         return true;

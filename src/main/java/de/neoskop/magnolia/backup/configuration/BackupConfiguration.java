@@ -5,8 +5,10 @@ import info.magnolia.init.MagnoliaConfigurationProperties;
 import info.magnolia.objectfactory.Components;
 import org.apache.commons.lang3.StringUtils;
 import java.io.File;
+import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class BackupConfiguration {
     private static final String TMP_BACKUP = "/tmp/backup";
@@ -37,6 +39,10 @@ public class BackupConfiguration {
     private static final String BACKUP_AUTO_CRONJOB_ENV = "BACKUP_AUTO_CRONJOB";
     private static final String BACKUP_AUTO_ENABLED_ENV = "BACKUP_AUTO_ENABLED";
 
+    private static final String BACKUP_ROTATION_ENABLED_ENV = "BACKUP_ROTATION_ENABLED";
+    private static final String BACKUP_ROTATION_WEEKLY_DAY_ENV = "BACKUP_ROTATION_WEEKLY_DAY";
+    private static final String BACKUP_ROTATION_WEEKLY_COUNT_ENV = "BACKUP_ROTATION_WEEKLY_COUNT";
+
     private static final String BACKUP_SERVER_PROTOCOL_PROP =
             "neoskop.magnolia.backup.server.protocol";
     private static final String BACKUP_SERVER_HOST_PROP = "neoskop.magnolia.backup.server.host";
@@ -64,6 +70,13 @@ public class BackupConfiguration {
             "neoskop.magnolia.backup.auto.environment";
     private static final String BACKUP_AUTO_CRONJOB_PROP = "neoskop.magnolia.backup.auto.cronjob";
     private static final String BACKUP_AUTO_ENABLED_PROP = "neoskop.magnolia.backup.auto.enabled";
+
+    private static final String BACKUP_ROTATION_ENABLED_PROP =
+            "neoskop.magnolia.backup.rotation.enabled";
+    private static final String BACKUP_ROTATION_WEEKLY_DAY_PROP =
+            "neoskop.magnolia.backup.rotation.weeklyDay";
+    private static final String BACKUP_ROTATION_WEEKLY_COUNT_PROP =
+            "neoskop.magnolia.backup.rotation.weeklyCount";
 
     public static String getTmpBackupFolder() {
         return TMP_BACKUP;
@@ -180,6 +193,33 @@ public class BackupConfiguration {
     public static boolean getRestoreDuringStartup() {
         return Boolean.parseBoolean(getValueFromSystemEnvOrMgnlProp(BACKUP_RESTORE_DURING_STARTUP_ENV,
                 BACKUP_RESTORE_DURING_STARTUP_PROP));
+    }
+
+    public static boolean getRotationEnabled() {
+        String value = getValueFromSystemEnvOrMgnlProp(BACKUP_ROTATION_ENABLED_ENV,
+                BACKUP_ROTATION_ENABLED_PROP);
+        if (value == null) {
+            return true;
+        }
+        return Boolean.parseBoolean(value);
+    }
+
+    public static DayOfWeek getRotationWeeklyDay() {
+        String value = getValueFromSystemEnvOrMgnlProp(BACKUP_ROTATION_WEEKLY_DAY_ENV,
+                BACKUP_ROTATION_WEEKLY_DAY_PROP);
+        if (value == null) {
+            return DayOfWeek.MONDAY;
+        }
+        return DayOfWeek.valueOf(value.trim().toUpperCase(Locale.ENGLISH));
+    }
+
+    public static int getRotationWeeklyCount() {
+        String value = getValueFromSystemEnvOrMgnlProp(BACKUP_ROTATION_WEEKLY_COUNT_ENV,
+                BACKUP_ROTATION_WEEKLY_COUNT_PROP);
+        if (value == null) {
+            return 4;
+        }
+        return Math.max(1, Integer.parseInt(value.trim()));
     }
 
     public static List<Repository> getRepositories() {
